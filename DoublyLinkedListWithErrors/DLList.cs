@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DoublyLinkedListWithErrors
 {
-   public class DLList
+    public class DLList
     {
         public DLLNode head; // pointer to the head of the list
         public DLLNode tail; // pointer to the tail of the list
-       public DLList() { head = null;  tail = null; } // constructor
+        public DLList() { head = null; tail = null; } // constructor
         /*-------------------------------------------------------------------
         * The methods below includes several errors. Your  task is to write
         * unit test to discover these errors. During delivery the tutor may
@@ -27,8 +27,8 @@ namespace DoublyLinkedListWithErrors
             else
             {
                 tail.next = p;
-                tail = p;
                 p.previous = tail;
+                tail = p;
             }
         } // end of addToTail
 
@@ -51,7 +51,15 @@ namespace DoublyLinkedListWithErrors
         {
             if (this.head == null) return;
             this.head = this.head.next;
-            this.head.previous = null;
+            if (this.head != null)
+            {
+                this.head.previous = null;
+            }
+            else
+            {
+                head = null;
+                tail = null;
+            }
         } // removeHead
 
         public void removeTail()
@@ -63,6 +71,12 @@ namespace DoublyLinkedListWithErrors
                 this.tail = null;
                 return;
             }
+            else
+            {
+                DLLNode node = this.tail.previous;
+                this.tail = node;
+                node.next = null;
+            }
         } // remove tail
 
         /*-------------------------------------------------
@@ -73,33 +87,35 @@ namespace DoublyLinkedListWithErrors
             DLLNode p = head;
             while (p != null)
             {
-                p = p.next;
                 if (p.num == num) break;
+                p = p.next;
             }
             return (p);
-        } // end of search (return pionter to the node);
+        } // end of search (return pionter to the node); 80
 
         public void removeNode(DLLNode p)
         { // removing the node p.
-
-            if (p.next == null)
+            if (p != null)
             {
-                this.tail = this.tail.previous;
-                this.tail.next = null;
-                p.previous = null;
-                return;
-            }
-            if (p.previous == null)
-            {
-                this.head = this.head.next;
+                if (p.next == null)
+                {
+                    this.tail = this.tail.previous;
+                    this.tail.next = null;
+                    p.previous = null;
+                    return;
+                }
+                if (p.previous == null)
+                {
+                    this.head = this.head.next;
+                    p.next = null;
+                    this.head.previous = null;
+                    return;
+                }
+                p.next.previous = p.previous;
+                p.previous.next = p.next;
                 p.next = null;
-                this.head.previous = null;
-                return;
+                p.previous = null;
             }
-            p.next.previous = p.previous;
-            p.previous.next = p.next;
-            p.next = null;
-            p.previous = null;
             return;
         } // end of remove a node
 
@@ -109,8 +125,8 @@ namespace DoublyLinkedListWithErrors
             int tot = 0;
             while (p != null)
             {
-                tot += p.num;
-                p = p.next.next;
+                tot++;
+                p = p.next;
             }
             return (tot);
         } // end of total
